@@ -6,17 +6,33 @@
 /*   By: malouvar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 10:36:14 by malouvar          #+#    #+#             */
-/*   Updated: 2022/01/21 12:32:13 by malouvar         ###   ########.fr       */
+/*   Updated: 2022/01/21 14:58:26 by malouvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-char	*get_paths(char **envp)
+char	*__cmd(char **cmd_paths, char *args)
 {
-	while (ft_strncmp("PATH", *envp, 4))
-		envp++;
-	return (*envp + 5);
+
+}
+
+void	first_proc(t_params params, char **argv, char **envp)
+{
+	dup2(params.end[1], 1);
+	close(params.end[0]);
+	dup2(params.infile, 0);
+	params.cmd_args = __split(argv[2], ' ');
+	params.cmd = __cmd(params.cmd_paths, params.cmd_args[0]);
+}
+
+void	second_proc(t_params params, char **argv, char **envp)
+{
+	dup2(params.end[0], 0);
+	close(params.end[1]);
+	dup2(params.outfile, 1);
+	params.cmd_args = __split(argv[3], ' ');
+	params.cmd = __cmd(params.cmd_paths, params.cmd_args[0]);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -25,7 +41,7 @@ int	main(int argc, char **argv, char **envp)
 
 	if (argc != 5)
 		return (err("Wrong number of arguments\n"));
-	params.infile = open(argv[1], O_RDNOLY);
+	params.infile = open(argv[1], O_RDONLY);
 	if (params.infile < 0)
 		perr("Infile error !");
 	params.outfile = open(argv[4], O_TRUNC | O_CREAT | O_RDWR);
@@ -34,6 +50,17 @@ int	main(int argc, char **argv, char **envp)
 	if (pipe(params.end) < 0)
 		perr("Pipe error !");
 	params.paths = get_paths(envp);
-	params.cmd_paths = ft_split(params.path, ':');
+	params.cmd_paths = __split(params.paths, ':');
+	params.child1 = fork();
+	if (params.child1 == 0)
+		first_proc(params, argv, envp);
+	params.child2 = fork();
+	if (params.child2 == 0)
+		second_proc(params, argv, envp);
+	close(params.end[0]);
+	close(params.end[1]);
+	waitpid(pipex.child1, NULL, 0);
+	waitpid(pipex.child2, NULL, 0);
+	__free_params(&params);
 	return (0);
 }
