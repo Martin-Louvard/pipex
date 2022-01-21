@@ -6,7 +6,7 @@
 /*   By: malouvar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 10:36:14 by malouvar          #+#    #+#             */
-/*   Updated: 2022/01/21 16:11:06 by malouvar         ###   ########.fr       */
+/*   Updated: 2022/01/21 16:21:58 by malouvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,17 @@
 
 char	*__cmd(char **cmd_paths, char *args)
 {
-	char	*try;
+	char	*guess;
 	char	*tmp;
 
 	while (*cmd_paths)
 	{
 		tmp = __strjoin(*cmd_paths, "/");
-		try = __strjoin(tmp, args);
+		guess = __strjoin(tmp, args);
 		free(tmp);
-		if (access(try, 0) == 0)
-			return (try);
-		free(try);
+		if (access(guess, 0) == 0)
+			return (guess);
+		free(guess);
 		cmd_paths++;
 	}
 	return (NULL);
