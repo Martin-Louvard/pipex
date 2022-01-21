@@ -6,7 +6,7 @@
 /*   By: malouvar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 10:37:35 by malouvar          #+#    #+#             */
-/*   Updated: 2022/01/21 17:00:40 by malouvar         ###   ########.fr       */
+/*   Updated: 2022/01/21 17:16:22 by malouvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,17 @@
 
 typedef struct s_params
 {
-	int		end[2];
+	int		*ends;
 	int		infile;
 	int		outfile;
-	pid_t	child1;
-	pid_t	child2;
+	pid_t	child;
 	char	*paths;
 	char	**cmd_paths;
 	char	**cmd_args;
 	char	*cmd;
+	int		heredoc;
+	int		pipe_nb;
+	int		cmd_nb;
 }	t_params;
 
 int		__err(char *msg);

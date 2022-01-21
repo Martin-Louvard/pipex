@@ -6,7 +6,7 @@
 /*   By: malouvar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 10:36:14 by malouvar          #+#    #+#             */
-/*   Updated: 2022/01/21 17:00:12 by malouvar         ###   ########.fr       */
+/*   Updated: 2022/01/21 17:39:13 by malouvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,27 +72,7 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_params	params;
 
-	if (argc != 5)
-		return (__err("Wrong number of arguments\n"));
-	params.infile = open(argv[1], O_RDONLY);
-	if (params.infile < 0)
-		__perr("Infile error !");
-	params.outfile = open(argv[4], O_TRUNC | O_CREAT | O_RDWR, 0644);
-	if (params.outfile < 0)
-		__perr("Outfile error !");
-	if (pipe(params.end) < 0)
-		__perr("Pipe error !");
-	params.paths = __paths(envp);
-	params.cmd_paths = __split(params.paths, ':');
-	params.child1 = fork();
-	if (params.child1 == 0)
-		__first_proc(params, argv, envp);
-	params.child2 = fork();
-	if (params.child2 == 0)
-		__second_proc(params, argv, envp);
-	__close_tube(&params);
-	waitpid(params.child1, NULL, 0);
-	waitpid(params.child2, NULL, 0);
-	__free_params(&params);
+	__check_heredoc(argv[1], &params);
+
 	return (0);
 }
