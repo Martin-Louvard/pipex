@@ -6,7 +6,7 @@
 /*   By: malouvar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 11:45:19 by malouvar          #+#    #+#             */
-/*   Updated: 2022/01/21 15:56:20 by malouvar         ###   ########.fr       */
+/*   Updated: 2022/01/21 16:09:47 by malouvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,20 +42,20 @@ void	__free_args(t_params *params)
 		free(params->cmd);
 }
 
-char	*get_paths(char **envp)
+char	*__paths(char **envp)
 {
 	while (__strncmp("PATH", *envp, 4))
 		envp++;
 	return (*envp + 5);
 }
 
-int	err(char *msg)
+int	__err(char *msg)
 {
 	write(2, msg, __strlen(msg));
 	return (1);
 }
 
-void	perr(char *msg)
+void	__perr(char *msg)
 {
 	perror(msg);
 	exit(1);

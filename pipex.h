@@ -6,7 +6,7 @@
 /*   By: malouvar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 10:37:35 by malouvar          #+#    #+#             */
-/*   Updated: 2022/01/21 15:56:34 by malouvar         ###   ########.fr       */
+/*   Updated: 2022/01/21 16:10:02 by malouvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,9 @@ typedef struct s_params
 	char	*cmd;
 }	t_params;
 
-int		err(char *msg);
-void	perr(char *msg);
+int		__err(char *msg);
+void	__perr(char *msg);
 void	__free_params(t_params *params);
-char	*get_paths(char **envp);
+char	*__paths(char **envp);
 void	__free_args(t_params *params);
 #endif
