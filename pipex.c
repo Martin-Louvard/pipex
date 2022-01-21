@@ -6,7 +6,7 @@
 /*   By: malouvar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 10:36:14 by malouvar          #+#    #+#             */
-/*   Updated: 2022/01/21 14:58:26 by malouvar         ###   ########.fr       */
+/*   Updated: 2022/01/21 15:23:05 by malouvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,20 @@
 
 char	*__cmd(char **cmd_paths, char *args)
 {
+	char	*try;
+	char	*tmp;
 
+	while (*cmd_paths)
+	{
+		tmp = __strjoin(*cmd_paths, "/");
+		try = __strjoin(tmp, args);
+		free(tmp);
+		if (access(try, 0) == 0)
+			return (try);
+		free(try);
+		cmd_paths++;
+	}
+	return (NULL);
 }
 
 void	first_proc(t_params params, char **argv, char **envp)
@@ -24,6 +37,13 @@ void	first_proc(t_params params, char **argv, char **envp)
 	dup2(params.infile, 0);
 	params.cmd_args = __split(argv[2], ' ');
 	params.cmd = __cmd(params.cmd_paths, params.cmd_args[0]);
+	if (!params.cmd)
+	{
+		__free_args(&params);
+		err("Error with first command\n");
+		exit(1);
+	}
+	execve(params.cmd, params.cmd_args, envp);
 }
 
 void	second_proc(t_params params, char **argv, char **envp)
@@ -33,6 +53,13 @@ void	second_proc(t_params params, char **argv, char **envp)
 	dup2(params.outfile, 1);
 	params.cmd_args = __split(argv[3], ' ');
 	params.cmd = __cmd(params.cmd_paths, params.cmd_args[0]);
+	if (!params.cmd)
+	{
+		__free_args(&params);
+		err("Error with second command\n");
+		exit(1);
+	}
+	execve(params.cmd, params.cmd_args, envp);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -59,8 +86,8 @@ int	main(int argc, char **argv, char **envp)
 		second_proc(params, argv, envp);
 	close(params.end[0]);
 	close(params.end[1]);
-	waitpid(pipex.child1, NULL, 0);
-	waitpid(pipex.child2, NULL, 0);
+	waitpid(params.child1, NULL, 0);
+	waitpid(params.child2, NULL, 0);
 	__free_params(&params);
 	return (0);
 }
