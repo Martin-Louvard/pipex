@@ -6,7 +6,7 @@
 /*   By: malouvar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 10:36:14 by malouvar          #+#    #+#             */
-/*   Updated: 2022/01/21 15:55:12 by malouvar         ###   ########.fr       */
+/*   Updated: 2022/01/21 15:59:18 by malouvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,12 @@ void	second_proc(t_params params, char **argv, char **envp)
 	execve(params.cmd, params.cmd_args, envp);
 }
 
+void	__close_tube(t_params *params)
+{
+	close(params->end[0]);
+	close(params->end[1]);
+}
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_params	params;
@@ -84,8 +90,7 @@ int	main(int argc, char **argv, char **envp)
 	params.child2 = fork();
 	if (params.child2 == 0)
 		second_proc(params, argv, envp);
-	close(params.end[0]);
-	close(params.end[1]);
+	__close_tube(&params);
 	waitpid(params.child1, NULL, 0);
 	waitpid(params.child2, NULL, 0);
 	__free_params(&params);
