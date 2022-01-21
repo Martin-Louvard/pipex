@@ -6,7 +6,7 @@
 /*   By: malouvar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 10:36:14 by malouvar          #+#    #+#             */
-/*   Updated: 2022/01/21 16:21:58 by malouvar         ###   ########.fr       */
+/*   Updated: 2022/01/21 16:24:09 by malouvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void	__first_proc(t_params params, char **argv, char **envp)
 	if (!params.cmd)
 	{
 		__free_args(&params);
-		__err("Error with first command\n");
+		__err("Can't find binary file for first command\n");
 		exit(1);
 	}
 	execve(params.cmd, params.cmd_args, envp);
@@ -56,7 +56,7 @@ void	__second_proc(t_params params, char **argv, char **envp)
 	if (!params.cmd)
 	{
 		__free_args(&params);
-		__err("Error with second command\n");
+		__err("Can't find binary file for second command\n");
 		exit(1);
 	}
 	execve(params.cmd, params.cmd_args, envp);
