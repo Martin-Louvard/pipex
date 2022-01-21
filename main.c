@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.c                                            :+:      :+:    :+:   */
+/*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: malouvar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 10:36:14 by malouvar          #+#    #+#             */
-/*   Updated: 2022/01/21 15:23:05 by malouvar         ###   ########.fr       */
+/*   Updated: 2022/01/21 15:55:12 by malouvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ int	main(int argc, char **argv, char **envp)
 	params.infile = open(argv[1], O_RDONLY);
 	if (params.infile < 0)
 		perr("Infile error !");
-	params.outfile = open(argv[4], O_TRUNC | O_CREAT | O_RDWR);
+	params.outfile = open(argv[4], O_TRUNC | O_CREAT | O_RDWR, 0644);
 	if (params.outfile < 0)
 		perr("Outfile error !");
 	if (pipe(params.end) < 0)
