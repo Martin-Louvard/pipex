@@ -6,12 +6,12 @@
 #    By: malouvar <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/21 12:25:55 by malouvar          #+#    #+#              #
-#    Updated: 2022/01/21 15:52:38 by malouvar         ###   ########.fr        #
+#    Updated: 2022/01/21 16:58:00 by malouvar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRCS =	main.c \
-		utils.c
+SRCS =	srcs/main.c \
+		srcs/utils.c
 
 OBJS = ${SRCS:.c=.o}
 

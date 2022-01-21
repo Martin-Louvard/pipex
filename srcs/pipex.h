@@ -6,7 +6,7 @@
 /*   By: malouvar <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 10:37:35 by malouvar          #+#    #+#             */
-/*   Updated: 2022/01/21 16:10:02 by malouvar         ###   ########.fr       */
+/*   Updated: 2022/01/21 16:58:30 by malouvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # include <sys/wait.h>
 # include <stdio.h>
 # include <string.h>
-# include "libft/includes/libft.h"
+# include "../libft/includes/libft.h"
 
 typedef struct s_params
 {
