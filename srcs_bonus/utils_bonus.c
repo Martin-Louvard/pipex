@@ -6,25 +6,11 @@
 /*   By: malouvar <malouvar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 11:45:19 by malouvar          #+#    #+#             */
-/*   Updated: 2022/01/24 14:21:21 by malouvar         ###   ########.fr       */
+/*   Updated: 2022/01/24 16:51:39 by malouvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
-
-int	__check_heredoc(char *argv1, t_params *params)
-{
-	if (argv1 && !__strncmp(argv1, "here_doc", 9))
-	{
-		params->heredoc = 1;
-		return (6);
-	}
-	else
-	{
-		params->heredoc = 0;
-		return (5);
-	}
-}
 
 void	__free_params(t_params *params)
 {

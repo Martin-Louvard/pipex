@@ -6,7 +6,7 @@
 /*   By: malouvar <malouvar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 10:37:35 by malouvar          #+#    #+#             */
-/*   Updated: 2022/01/24 15:05:12 by malouvar         ###   ########.fr       */
+/*   Updated: 2022/01/24 16:55:31 by malouvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,10 @@ void	__close_tube(t_params *params);
 void	__child(t_params *params, char **argv, char **envp);
 void	__dup2(int new_in, int new_out);
 char	*__cmd(char **cmd_paths, char *args);
-int	__check_heredoc(char *argv1, t_params *params);
+int		__check_heredoc(char *argv1, t_params *params);
 void	__free_params(t_params *params);
 void	__free_args(t_params *params);
 char	*__paths(char **envp);
-int	__err(char *msg);
+int		__err(char *msg);
 void	__perr(char *msg);
 #endif

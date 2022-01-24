@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: malouvar <marvin@42.fr>                    +#+  +:+       +#+         #
+#    By: malouvar <malouvar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/21 12:25:55 by malouvar          #+#    #+#              #
-#    Updated: 2022/01/21 17:07:01 by malouvar         ###   ########.fr        #
+#    Updated: 2022/01/24 16:52:47 by malouvar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,8 @@ SRCS =	srcs/main.c \
 		srcs/utils.c
 
 SRCSBONUS = srcs_bonus/main_bonus.c \
-			srcs_bonus/utils_bonus.c
+			srcs_bonus/utils_bonus.c \
+			srcs_bonus/utils_2_bonus.c
 
 OBJS = ${SRCS:.c=.o}
 
