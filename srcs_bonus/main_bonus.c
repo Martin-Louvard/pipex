@@ -6,7 +6,7 @@
 /*   By: malouvar <malouvar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 10:36:14 by malouvar          #+#    #+#             */
-/*   Updated: 2022/01/24 16:20:02 by malouvar         ###   ########.fr       */
+/*   Updated: 2022/01/24 16:42:30 by malouvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ void	__init_pipes(t_params *params, char **envp)
 		__free_params(params);
 		__perr("Malloc error !");
 	}
-	while (i < params->cmd_nb)
+	while (i < params->cmd_nb - 1)
 	{
 		if (pipe(params->ends + (2 * i)) < 0)
 		{
