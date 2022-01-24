@@ -3,21 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   utils_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malouvar <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: malouvar <malouvar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 11:45:19 by malouvar          #+#    #+#             */
-/*   Updated: 2022/01/21 17:34:28 by malouvar         ###   ########.fr       */
+/*   Updated: 2022/01/24 13:45:21 by malouvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex_bonus.h"
 
-void	__check_heredoc(char *argv1, t_params *params)
+int	__check_heredoc(char *argv1, t_params *params)
 {
 	if (argv1 && !__strncmp(argv1, "here_doc", 9))
+	{
 		params->heredoc = 1;
+		return (6);
+	}
 	else
+	{
 		params->heredoc = 0;
+		return (5);
+	}
 }
 
 void	__free_params(t_params *params)
@@ -25,8 +31,11 @@ void	__free_params(t_params *params)
 	int	i;
 
 	i = 0;
-	close(params->infile);
-	close(params->outfile);
+	if (!params->heredoc)
+	{
+		close(params->infile);
+		close(params->outfile);
+	}
 	while (params->cmd_paths[i])
 	{
 		free(params->cmd_paths[i]);
