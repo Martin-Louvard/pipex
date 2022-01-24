@@ -6,7 +6,7 @@
 /*   By: malouvar <malouvar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 10:36:14 by malouvar          #+#    #+#             */
-/*   Updated: 2022/01/24 15:14:02 by malouvar         ###   ########.fr       */
+/*   Updated: 2022/01/24 16:20:02 by malouvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,10 @@ void	__child(t_params *params, char **argv, char **envp)
 		if (params->child_n == 0)
 			__dup2(params->infile, params->ends[1]);
 		else if (params->child_n == (params->cmd_nb - 1))
-			__dup2(params->ends[params->pipe_nb - 1] ,params->outfile);
+			__dup2(params->ends[2 * params->child_n - 2] ,params->outfile);
 		else
 			__dup2(params->ends[2 * params->child_n - 2], params->ends[2 * params->child_n + 1]);
+		__close_tube(params);
 		params->cmd_args = __split(argv[2 + params->heredoc + params->child_n], ' ');
 		params->cmd = __cmd(params->cmd_paths, params->cmd_args[0]);
 		if (!params->cmd)
@@ -142,7 +143,7 @@ void	__open_files(t_params *params, int argc, char **argv)
 	else
 	{
 		__heredoc(params, argv[2]);
-		params->outfile = open(argv[argc - 1], O_WRONLY | O_CREAT | O_APPEND, 0000644);
+		params->outfile = open(argv[argc - 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (params->outfile < 0)
 			__perr("Outfile error !");
 	}
@@ -152,7 +153,7 @@ int	main(int argc, char **argv, char **envp)
 {
 	t_params	params;
 
-	if (__check_heredoc(argv[1], &params) < argc)
+	if (__check_heredoc(argv[1], &params) > argc)
 		return (__err("Not enough arguments"));
 	params.cmd_nb = argc - 3 - params.heredoc;
 	params.pipe_nb = (params.cmd_nb - 1) * 2;
