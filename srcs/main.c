@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: malouvar <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: malouvar <malouvar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 10:36:14 by malouvar          #+#    #+#             */
-/*   Updated: 2022/01/21 16:24:09 by malouvar         ###   ########.fr       */
+/*   Updated: 2022/01/24 14:28:52 by malouvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ void	__first_proc(t_params params, char **argv, char **envp)
 		exit(1);
 	}
 	execve(params.cmd, params.cmd_args, envp);
+	__free_args(&params);
 }
 
 void	__second_proc(t_params params, char **argv, char **envp)
@@ -60,6 +61,7 @@ void	__second_proc(t_params params, char **argv, char **envp)
 		exit(1);
 	}
 	execve(params.cmd, params.cmd_args, envp);
+	__free_args(&params);
 }
 
 void	__close_tube(t_params *params)

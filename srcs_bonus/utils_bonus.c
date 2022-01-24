@@ -6,7 +6,7 @@
 /*   By: malouvar <malouvar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 11:45:19 by malouvar          #+#    #+#             */
-/*   Updated: 2022/01/24 13:45:21 by malouvar         ###   ########.fr       */
+/*   Updated: 2022/01/24 14:21:21 by malouvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,17 +31,17 @@ void	__free_params(t_params *params)
 	int	i;
 
 	i = 0;
-	if (!params->heredoc)
-	{
-		close(params->infile);
-		close(params->outfile);
-	}
+	close(params->infile);
+	close(params->outfile);
+	if (params->heredoc)
+		unlink(".heredoc_tmp");
 	while (params->cmd_paths[i])
 	{
 		free(params->cmd_paths[i]);
 		i++;
 	}
 	free(params->cmd_paths);
+	free(params->ends);
 }
 
 void	__free_args(t_params *params)

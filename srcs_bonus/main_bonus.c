@@ -6,7 +6,7 @@
 /*   By: malouvar <malouvar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/01/21 10:36:14 by malouvar          #+#    #+#             */
-/*   Updated: 2022/01/24 14:09:37 by malouvar         ###   ########.fr       */
+/*   Updated: 2022/01/24 15:14:02 by malouvar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,69 +30,77 @@ char	*__cmd(char **cmd_paths, char *args)
 	return (NULL);
 }
 
-void	__first_proc(t_params params, char **argv, char **envp)
+void	__dup2(int new_in, int new_out)
 {
-	dup2(params.end[1], 1);
-	close(params.end[0]);
-	dup2(params.infile, 0);
-	params.cmd_args = __split(argv[2], ' ');
-	params.cmd = __cmd(params.cmd_paths, params.cmd_args[0]);
-	if (!params.cmd)
-	{
-		__free_args(&params);
-		__err("Can't find binary file for first command\n");
-		exit(1);
-	}
-	execve(params.cmd, params.cmd_args, envp);
+	dup2(new_in, 0);
+	dup2(new_out, 1);
 }
 
-void	__second_proc(t_params params, char **argv, char **envp)
+void	__child(t_params *params, char **argv, char **envp)
 {
-	dup2(params.end[0], 0);
-	close(params.end[1]);
-	dup2(params.outfile, 1);
-	params.cmd_args = __split(argv[3], ' ');
-	params.cmd = __cmd(params.cmd_paths, params.cmd_args[0]);
-	if (!params.cmd)
+	params->child = fork();
+	if (params->child == 0)
 	{
-		__free_args(&params);
-		__err("Can't find binary file for second command\n");
-		exit(1);
+		if (params->child_n == 0)
+			__dup2(params->infile, params->ends[1]);
+		else if (params->child_n == (params->cmd_nb - 1))
+			__dup2(params->ends[params->pipe_nb - 1] ,params->outfile);
+		else
+			__dup2(params->ends[2 * params->child_n - 2], params->ends[2 * params->child_n + 1]);
+		params->cmd_args = __split(argv[2 + params->heredoc + params->child_n], ' ');
+		params->cmd = __cmd(params->cmd_paths, params->cmd_args[0]);
+		if (!params->cmd)
+		{
+			__free_args(params);
+			__err("Can't find binary file for command\n");
+			exit(1);
+		}
+		execve(params->cmd, params->cmd_args, envp);
 	}
-	execve(params.cmd, params.cmd_args, envp);
 }
 
-void	__close_tube(t_params *params, int argc)
+void	__close_tube(t_params *params)
 {
 	int	i;
 
 	i = 0;
 	while (i < params->pipe_nb)
 	{
-		close(params->end[i]);
+		close(params->ends[i]);
 		i++;
 	}
 }
 
-void	__init_pipes(t_params *params, int argc, char **argv, char **envp)
+void	__init_pipes(t_params *params, char **envp)
 {
 	int	i;
 
 	i = 0;
-	pipe = malloc(sizeof(int) * (params->pipe_nb));
-	if (!pipe)
+	params->paths = __paths(envp);
+	params->cmd_paths = __split(params->paths, ':');
+	if (!params->cmd_paths)
+	{
+		__free_params(params);
 		__perr("Malloc error !");
+	}
+	params->ends = malloc(sizeof(int) * (params->pipe_nb));
+	if (!params->ends)
+	{
+		__free_params(params);
+		__perr("Malloc error !");
+	}
 	while (i < params->cmd_nb)
 	{
-		if (pipe(params->ends + (2 * i) < 0))
+		if (pipe(params->ends + (2 * i)) < 0)
+		{
+			__free_params(params);
 			__perr("Pipe error !");
+		}
 		i++;
 	}
-	params.paths = __paths(envp);
-	params.cmd_paths = __split(params.paths, ':');
 }
 
-int	__heredoc(t_params *params, char *limiter)
+void	__heredoc(t_params *params, char *limiter)
 {
 	int		fd;
 	char	*line;
@@ -103,10 +111,11 @@ int	__heredoc(t_params *params, char *limiter)
 	while (1)
 	{
 		write(1, "heredoc> ", 9);
-		line = get_next_line(0);
+		line = __gnl(0);
 		if (!__strncmp(limiter, line, __strlen(limiter)))
 			break ;
 		write(fd, line, __strlen(line));
+		write(fd, "\n", 1);
 		free(line);
 	}
 	free(line);
@@ -132,7 +141,7 @@ void	__open_files(t_params *params, int argc, char **argv)
 	}
 	else
 	{
-		__heredoc(&params, argv[2]);
+		__heredoc(params, argv[2]);
 		params->outfile = open(argv[argc - 1], O_WRONLY | O_CREAT | O_APPEND, 0000644);
 		if (params->outfile < 0)
 			__perr("Outfile error !");
@@ -148,7 +157,13 @@ int	main(int argc, char **argv, char **envp)
 	params.cmd_nb = argc - 3 - params.heredoc;
 	params.pipe_nb = (params.cmd_nb - 1) * 2;
 	__open_files(&params, argc, argv);
-	__init_pipes(&params, argc, argv, envp);
+	__init_pipes(&params, envp);
+	params.child_n = 0;
+	while (params.child_n < params.cmd_nb)
+	{
+		__child(&params, argv, envp);
+		params.child_n++;
+	}
 	__close_tube(&params);
 	waitpid(-1, NULL, 0);
 	__free_params(&params);
